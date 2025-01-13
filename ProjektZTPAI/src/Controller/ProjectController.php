@@ -43,12 +43,7 @@ class ProjectController extends AbstractController
     public function updateProject(int $id, Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $project = new Project();
-        $project->setName($data['name']);
-        $project->setDescription($data['description']);
-        $project->setCompleted($data['completed'] ?? false);
-
-        $updatedProject = $this->projectService->updateProject($id, $project);
+        $updatedProject = $this->projectService->updateProject($id, $data);
         return $this->json($updatedProject);
     }
 

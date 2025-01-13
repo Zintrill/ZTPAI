@@ -2,12 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\ProjectRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\User;
 
-#[ORM\Entity(repositoryClass: ProjectRepository::class)]
+#[ORM\Entity]
 class Project
 {
     #[ORM\Id]
@@ -15,20 +12,14 @@ class Project
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
     #[ORM\Column]
     private ?bool $completed = null;
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $owner = null;
-
-    // ================== GETTERY I SETTERY ==================
 
     public function getId(): ?int
     {
@@ -40,7 +31,7 @@ class Project
         return $this->name;
     }
 
-    public function setName(?string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
@@ -51,7 +42,7 @@ class Project
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
         return $this;
@@ -62,20 +53,9 @@ class Project
         return $this->completed;
     }
 
-    public function setCompleted(bool $completed): static
+    public function setCompleted(bool $completed): self
     {
         $this->completed = $completed;
-        return $this;
-    }
-
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): static
-    {
-        $this->owner = $owner;
         return $this;
     }
 }

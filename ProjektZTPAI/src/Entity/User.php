@@ -2,76 +2,118 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\Entity]
+#[ORM\Table(name: "users")]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: "integer")]
+    private ?int $user_id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
-    private string $email;
+    #[ORM\Column(length: 100)]
+    private ?string $fullname = null;
 
-    #[ORM\Column]
-    private string $password;
-
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Project::class, cascade: ['persist', 'remove'])]
-    private Collection $projects;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $username = null;
 
-    public function __construct()
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
+
+    #[ORM\Column(length: 100, unique: true)]
+    private ?string $email = null;
+
+    #[ORM\ManyToOne(targetEntity: Permission::class)]
+    #[ORM\JoinColumn(name: "permission_id", referencedColumnName: "permission_id")]
+    private ?Permission $permission = null;
+
+    #[ORM\Column(type: "json")]
+    private array $roles = [];
+
+    // ✅ Gettery i settery
+    public function getId(): ?int
     {
-        $this->projects = new ArrayCollection();
+        return $this->user_id;
     }
 
-    public function getId(): ?int { return $this->id; }
-    public function getEmail(): string { return $this->email; }
-    public function setEmail(string $email): self { $this->email = $email; return $this; }
-
-    public function getPassword(): string { return $this->password; }
-    public function setPassword(string $password): self { $this->password = $password; return $this; }
-
-    public function getProjects(): Collection
+    public function getFullname(): ?string
     {
-        return $this->projects;
+        return $this->fullname;
     }
 
-    public function addProject(Project $project): self
+    public function setFullname(string $fullname): self
     {
-        if (!$this->projects->contains($project)) {
-            $this->projects[] = $project;
-            $project->setOwner($this);
-        }
+        $this->fullname = $fullname;
         return $this;
     }
 
-    public function removeProject(Project $project): self
-    {
-        if ($this->projects->removeElement($project)) {
-            if ($project->getOwner() === $this) {
-                $project->setOwner(null);
-            }
-        }
-        return $this;
-    }
-
-    public function getUsername(): ?string
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(string $username): self
     {
         $this->username = $username;
-
         return $this;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getPermission(): ?Permission
+    {
+        return $this->permission;
+    }
+
+    public function setPermission(?Permission $permission): self
+    {
+        $this->permission = $permission;
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    // ✅ Metody wymagane przez UserInterface
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Jeśli przechowujesz dane wrażliwe, możesz je tutaj wyczyścić
     }
 }

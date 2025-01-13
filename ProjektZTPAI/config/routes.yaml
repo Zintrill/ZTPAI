@@ -34,3 +34,8 @@ snmp_device_detail:
     controller: App\Controller\SnmpOverviewController::showDevice
     requirements:
         id: '\d+'
+        
+register:
+    path: /register
+    controller: App\Controller\SecurityController::register
+    methods: [GET, POST]

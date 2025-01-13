@@ -12,7 +12,7 @@ class SnmpOverviewController extends AbstractController
     public function showDevice(int $id): Response
     {
         return $this->render('snmp/device_detail.html.twig', [
-            'deviceId' => $id
+            'deviceId' => $id,
         ]);
     }
 }

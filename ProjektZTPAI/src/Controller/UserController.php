@@ -12,7 +12,7 @@ class UserController extends AbstractController
     public function showUser(string $uuid): Response
     {
         return $this->render('users/profile.html.twig', [
-            'uuid' => $uuid
+            'uuid' => $uuid,
         ]);
     }
 }

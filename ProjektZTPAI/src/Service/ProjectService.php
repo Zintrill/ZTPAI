@@ -29,16 +29,16 @@ class ProjectService
         return $project;
     }
 
-    public function updateProject(int $id, Project $projectDetails): ?Project
+    public function updateProject(int $id, array $data): ?Project
     {
         $project = $this->projectRepository->find($id);
         if (!$project) {
             throw new \Exception('Project not found');
         }
 
-        $project->setName($projectDetails->getName());
-        $project->setDescription($projectDetails->getDescription());
-        $project->setCompleted($projectDetails->getCompleted());
+        $project->setName($data['name']);
+        $project->setDescription($data['description']);
+        $project->setCompleted($data['completed'] ?? false);
 
         $this->entityManager->flush();
         return $project;
