@@ -1,5 +1,36 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+# config/routes.yaml
+
+# Statyczne trasy
+login:
+    path: /login
+    controller: App\Controller\LoginController::index
+
+dashboard:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
+
+snmp_configuration:
+    path: /snmp/configuration
+    controller: App\Controller\SnmpConfigurationController::index
+
+snmp_overview:
+    path: /snmp/overview
+    controller: App\Controller\SnmpOverviewController::index
+
+users:
+    path: /users
+    controller: App\Controller\UserController::index
+
+# Dynamiczna trasa dla UUID (profil użytkownika)
+user_profile:
+    path: /users/{uuid}
+    controller: App\Controller\UserController::showUser
+    requirements:
+        uuid: '[0-9a-fA-F\-]{36}'
+
+# Dynamiczna trasa dla ID (szczegóły urządzenia SNMP)
+snmp_device_detail:
+    path: /snmp/device/{id}
+    controller: App\Controller\SnmpOverviewController::showDevice
+    requirements:
+        id: '\d+'
